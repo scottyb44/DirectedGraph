@@ -1,30 +1,51 @@
 package digraph
 
 import (
-	"errors"
+	"fmt"
 )
 
-type digraph struct {
-	vertices []string
-	edges    []string
+type Node struct {
+	value string
 }
 
-func (d digraph) IsGraphValid() error {
-	for _,elem := range d.edges {
-		if (2 < len(elem)) {
-			return errors.New("edge cant have more than 2 vertices")
-		}
-		if (2 > len(elem)) {
-			return errors.New("edge cant have less than 2 vertices")
-		}
+type DiGraph struct {
+	vertices []*Node
+	edges    map[Node][]*Node
+}
+
+func (d *DiGraph) AddNode(node *Node) {
+	d.vertices = append(d.vertices, node)
+}
+
+func (d *DiGraph) AddEdge(vert1 *Node, vert2 *Node) {
+	if d.edges == nil {
+		d.edges = make(map[Node][]*Node)
 	}
-	return nil
+	d.edges[*vert1] = append(d.edges[*vert1], vert2)
 }
 
-func (d digraph) ConstructIncidenceMatrix() [][]int {
+func (d *DiGraph) PrintGraph() {
+	strGraph := ""
+	for _, elem := range d.vertices {
+		strGraph += elem.value + "-> "
+
+		edges, ok := d.edges[*elem]
+		if !ok {
+			continue
+		}
+		for _, edge := range edges {
+			strGraph += edge.value + " "
+		}
+		strGraph += "\n"
+	}
+	fmt.Println(strGraph)
+}
+
+// TODO SB: Do this and make an adjacency matrix
+func (d DiGraph) ConstructIncidenceMatrix() [][]int {
 	// for i, edge := range d.edges {
 	// 	for j, vert := range d.vertices {
 	// 	}
 	// }
-	return nil 
+	return nil
 }
